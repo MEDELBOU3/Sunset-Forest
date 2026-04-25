@@ -1,0 +1,29 @@
+SUNSET FOREST — END USER LICENSE AGREEMENT (EULA)
+
+Copyright (c) 2026 MOHAMED EL-BOUANANI. All rights reserved.
+
+1. Ownership
+This game, including all code, assets, graphics, audio, and content, is the intellectual property of the author. All rights are reserved.
+
+2. Permission to Use
+You are granted a limited, non-exclusive, non-transferable license to download, install, and play the game for personal, non-commercial use only.
+
+3. Restrictions
+You may NOT:
+- Copy, modify, or redistribute the game or any part of it
+- Use the assets, code, or content in other projects
+- Sell, rent, sublicense, or commercially exploit the game
+- Reverse engineer, decompile, or attempt to extract source code
+- Upload or distribute the game without permission
+
+4. Assets and Content
+All in-game assets (models, textures, sounds, etc.) are protected and may not be reused in any form without explicit permission.
+
+5. No Warranty
+This game is provided "as is" without warranty of any kind. The author is not responsible for any damages or issues resulting from its use.
+
+6. Termination
+This license is automatically terminated if you violate any of these terms.
+
+7. Contact
+For permissions or inquiries, contact: [your email here]

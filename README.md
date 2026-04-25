@@ -4,7 +4,7 @@
   <img src="game-project/assets/images/logo.png" alt="Sunset Forest Logo" width="400">
 </p>
 
-**Use it now:** [Open the game](game-project/index.html)
+**Use it now:** [Play the game](https://MEDELBOU3.github.io/Sunset-Forest/game-project/)
 
 ## Overview
 <img src="game-project/src/ui/game-view.png">

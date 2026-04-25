@@ -1,0 +1,1273 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+:root {
+    /* CoD Tactical Color Palette */
+    --cod-amber: #ffb700;
+    --cod-amber-dim: rgba(255, 183, 0, 0.4);
+    --cod-green: #23d160;
+    --cod-red: #ff2a2a;
+    --cod-blue: #00ccff;
+    --cod-bg-dark: rgba(15, 15, 15, 0.461);
+    --cod-bg-light: rgba(255, 255, 255, 0.1);
+    
+    /* Variable Mapping for existing JS/CSS structures */
+    --sunset-primary: var(--cod-amber);
+    --sunset-gold: #ffea00;
+    --forest-dark: #0a0a0a;
+    --ui-bg: var(--cod-bg-dark);
+    --ui-border: rgba(255, 255, 255, 0.15);
+    --ui-accent: var(--cod-amber);
+    --ui-danger: var(--cod-red);
+    --ui-health: var(--cod-green);
+    --text-primary: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.6);
+
+    --tac-primary: #ff4d00;
+    --tac-dark: rgba(10, 10, 10, 0.9);
+    --tac-border: rgba(255, 255, 255, 0.2);
+    --tac-text-muted: #999999;
+    
+    /* Modern Sans-Serif Fonts (CoD Style) */
+    --font-main: 'Rajdhani', 'Segoe UI', sans-serif;
+    --font-display: 'Barlow Condensed', 'Impact', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow: hidden;
+    background: #000000;
+    font-family: var(--font-main);
+    cursor: none;
+    text-transform: uppercase; /* Tactical military feel */
+}
+
+canvas {
+    display: block;
+}
+
+/* ── TACTICAL CURSOR ── */
+#cursor {
+    position: fixed;
+    width: 24px;
+    height: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width .1s, height .1s, border-color .1s, background-color 0.1s;
+    mix-blend-mode: difference;
+    will-change: transform;
+}
+
+#cursor::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+}
+
+#cursor.firing {
+    width: 12px;
+    height: 12px;
+    border-color: var(--cod-amber);
+    background: rgba(255, 183, 0, 0.2);
+}
+
+/* ── BLOCKER / FULL-SCREEN OVERLAY ── */
+#blocker {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 200;
+    background: #000;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+/* ── PROFESSIONAL CINEMATIC BACKGROUND ── */
+.blocker-bg {
+    position: absolute;
+    inset: -5%; 
+    background-image: 
+        linear-gradient(to bottom, 
+            rgba(0, 0, 0, 0.8) 0%, 
+            rgba(10, 15, 20, 0.4) 50%, 
+            rgba(0, 0, 0, 0.95) 100%),
+        url('../ui/menu-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    animation: menuBackgroundPan 120s linear infinite alternate;
+    filter: saturate(0.6) contrast(1.2) brightness(0.8);
+    z-index: 0;
+}
+
+@keyframes menuBackgroundPan {
+    0% { transform: scale(1.05) translate(0, 0); }
+    100% { transform: scale(1.1) translate(-2%, -1%); }
+}
+
+/* Gritty Film Overlay */
+#blocker::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.7) 100%);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* scanline overlay */
+#blocker::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(to bottom,
+            transparent 0px,
+            transparent 2px,
+            rgba(0, 0, 0, 0.15) 2px,
+            rgba(0, 0, 0, 0.15) 4px);
+    pointer-events: none;
+    z-index: 1;
+}
+
+#blocker.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: none; 
+}
+
+/* Tactical Scanlines */
+.scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg,
+            rgba(0, 0, 0, 0.2),
+            rgba(0, 0, 0, 0.2) 1px,
+            transparent 1px,
+            transparent 3px);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* --- HEADER SECTION --- */
+.header-section {
+    position: absolute;
+    top: 60px;
+    left: 80px;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.header-text {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--text-primary);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.header-line {
+    flex-grow: 1;
+    height: 2px;
+    background: linear-gradient(90deg, var(--cod-amber), transparent);
+}
+
+/* --- ANIMATIONS --- */
+/* (Kept standard structural animations) */
+@keyframes slideRight { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes drift { 0% { transform: translateY(0) translateX(0); opacity: 0; } 20% { opacity: 0.8; } 100% { transform: translateY(-100vh) translateX(50px); opacity: 0; } }
+@keyframes fadeInLeft { from { opacity: 0; transform: translateX(-60px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+
+/* --- PAUSE MENU (CoD Style Frost Glass) --- */
+#pause-menu {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(12px) saturate(150%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 90;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#pause-menu.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.pause-box {
+    text-align: center;
+    padding: 60px 80px;
+    background: linear-gradient(135deg, rgba(20,20,20,0.9), rgba(10,10,10,0.95));
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    position: relative;
+}
+
+.pause-title {
+    font-family: var(--font-display);
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    letter-spacing: 4px;
+}
+
+.pause-hint {
+    font-family: var(--font-main);
+    color: var(--text-muted);
+    font-weight: 500;
+    letter-spacing: 1px;
+    margin-bottom: 40px;
+}
+
+.pause-resume {
+    font-family: var(--font-main);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #000;
+    background: var(--text-primary);
+    border: none;
+    padding: 14px 48px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+.pause-resume:hover {
+    background: var(--cod-amber);
+    transform: scale(1.05);
+}
+
+/* --- HUD OVERLAY --- */
+#hud {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+#hud.visible {
+    opacity: 1;
+}
+
+/* --- CROSSHAIR --- */
+#crosshair {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px;
+    height: 32px;
+    pointer-events: none;
+}
+
+.ch-line {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 2px rgba(0,0,0,0.8);
+}
+
+.ch-line.h {
+    width: 10px;
+    height: 2px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.ch-line.h.left { transform: translate(calc(-50% - 12px), -50%); }
+.ch-line.h.right { transform: translate(calc(-50% + 12px), -50%); }
+
+.ch-line.v {
+    width: 2px;
+    height: 10px;
+    top: 50%;
+    left: 50%;
+}
+
+.ch-line.v.up { transform: translate(-50%, calc(-50% - 12px)); }
+.ch-line.v.down { transform: translate(-50%, calc(-50% + 12px)); }
+
+.ch-dot {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--text-primary);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* --- TOP LEFT PANEL (HEALTH/STAMINA) --- */
+#panel-tl {
+    position: fixed;
+    top: 20px; /* Moved to bottom like CoD */
+    left: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 280px;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+}
+
+.stat-row:nth-child(1) { border-left-color: var(--cod-green); } /* Health */
+.stat-row:nth-child(2) { border-left-color: var(--cod-amber); } /* Stamina */
+
+.stat-label {
+    font-family: var(--font-main);
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+.stat-bar-wrap {
+    flex: 1;
+    min-width: 180px;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    position: relative;
+}
+
+.stat-bar {
+    height: 100%;
+    transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stat-bar.health { background: var(--cod-green); box-shadow: 0 0 10px var(--cod-green); }
+.stat-bar.stamina { background: var(--cod-amber); box-shadow: 0 0 10px var(--cod-amber); }
+
+.stat-val {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    min-width: 40px;
+    text-align: right;
+}
+
+/* --- BOTTOM RIGHT PANEL (AMMO/WEAPONS) --- */
+#panel-br {
+    position: fixed;
+    bottom: 30px;
+    right: 40px;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px; /* Adds space between ammo, inventory, and weapons */
+}
+
+/* Make the giant ammo box slightly smaller */
+.ammo-count {
+    font-family: var(--font-display);
+    display: flex;
+    justify-content: flex-end;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 36px; /* Scaled down from 72px */
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 0.8;
+    background: var(--cod-bg-dark);
+    padding: 8px 16px; /* Reduced padding */
+    border: 1px solid var(--cod-border);
+}
+
+.ammo-max {
+    font-size: 26px; /* Scaled down */
+    color: var(--text-muted);
+}
+
+.ammo-divider {
+    font-size: 30px;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.weapon-name {
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--text-primary);
+    background: var(--cod-bg-dark);
+    padding: 4px 16px;
+    border: 1px solid var(--cod-border);
+    margin-bottom: -1px;
+    backdrop-filter: blur(4px);
+}
+
+.ammo-label {
+    display: none; /* Hide for cleaner tactical look */
+}
+
+#ammo-count.low {
+    color: var(--cod-amber);
+    border-right-color: var(--cod-amber);
+}
+
+#ammo-count.critical {
+    color: var(--cod-red);
+    border-right-color: var(--cod-red);
+    animation: pulseCritical 1s infinite;
+}
+
+@keyframes pulseCritical {
+    0% { background: rgba(255, 42, 42, 0.1); }
+    50% { background: rgba(255, 42, 42, 0.3); }
+    100% { background: rgba(255, 42, 42, 0.1); }
+}
+
+.ammo-reserve-wrap {
+    margin-top: 8px;
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--text-primary);
+    background: var(--cod-bg-dark);
+    padding: 4px 16px;
+    border: 1px solid var(--cod-border);
+}
+
+.ammo-pips {
+    display: flex;
+    justify-content: flex-end;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.pip {
+    width: 24px;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.pip.full { background: var(--text-primary); box-shadow: 0 0 5px rgba(255,255,255,0.5); }
+.pip.low { background: var(--cod-red); border-color: var(--cod-red); }
+
+/* --- WEAPON SLOTS (LOADOUT STYLE) --- */
+#wp-slots-container {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: row; /* CRITICAL: Puts weapons side-by-side horizontally */
+    gap: 8px;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.wp-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 75px;  /* SMALL WIDTH */
+    height: 65px; /* SMALL HEIGHT */
+    background: var(--cod-bg-dark);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3); /* Flat bottom edge */
+    cursor: pointer;
+    transition: all 0.15s ease;
+    backdrop-filter: blur(4px);
+    padding: 4px;
+}
+
+.wp-slot.active {
+    background: linear-gradient(0deg, rgba(255, 183, 0, 0.2), transparent);
+    border: 1px solid var(--cod-border);
+    border-bottom: 4px solid var(--cod-amber); /* Amber indicator on bottom */
+    transform: translateY(-5px); /* Pops up slightly when equipped */
+}
+.wp-slot:hover {
+    background: rgba(255,255,255,0.1);
+    border-bottom-color: var(--text-primary);
+    transform: translateY(-2px); /* Hop up slightly when hovered */
+}
+
+/* Adjust Number Position */
+.wp-num {
+    font-family: var(--font-display);
+    font-size: 12px;
+    align-self: flex-start; /* Puts 1, 2, 3 in the top left corner */
+    margin-left: 2px;
+    color: var(--text-muted);
+}
+.wp-slot.active .wp-num { color: var(--cod-amber); }
+
+/* Make images much smaller to fit inside */
+.wp-icon-img {
+    width: 45px; /* SMALLER IMAGE */
+    height: 20px;
+    object-fit: contain;
+    filter: invert(1) opacity(0.5);
+    margin-top: -5px;
+}
+.wp-slot.active .wp-icon-img {
+    filter: invert(1) opacity(1);
+}
+
+/* Hide weapon name in the slot (keep ammo only) for a cleaner look */
+.wp-label {
+    display: none; 
+}
+
+/* Compact text for weapon name and ammo */
+.wp-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.wp-label {
+    font-family: var(--font-main);
+    font-size: 10px; /* Very small text */
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.wp-ammo-mini {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+.wp-slot.active .wp-ammo-mini { color: var(--cod-amber); }
+/* --- RELOAD UI --- */
+#reload-notice {
+    position: fixed;
+    bottom: calc(50% - 60px);
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-main);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--text-primary);
+    background: rgba(0,0,0,0.7);
+    padding: 4px 16px;
+    border: 1px solid var(--cod-border);
+    opacity: 0;
+    transition: opacity 0.1s;
+}
+
+#reload-notice.visible { opacity: 1; }
+
+#reload-bar-wrap {
+    position: fixed;
+    bottom: calc(50% - 75px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255,255,255,0.2);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+#reload-bar-wrap.visible { opacity: 1; }
+
+#reload-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--text-primary);
+    transition: width linear;
+    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+#reload-wrap { display: none; }
+
+/* --- HIT MARKERS (CoD STYLE) --- */
+#hit-marker {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#hit-marker::before, #hit-marker::after {
+    content: '';
+    position: absolute;
+    background: #ffffff;
+    box-shadow: 0 0 4px rgba(0,0,0,0.8);
+}
+
+#hit-marker::before {
+    width: 2px;
+    height: 100%;
+    top: 0; left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+#hit-marker::after {
+    width: 100%;
+    height: 2px;
+    top: 50%; left: 0;
+    transform: translateY(-50%) rotate(45deg);
+}
+
+#hit-marker.flash {
+    animation: hitFlash 0.2s cubic-bezier(0, 1, 1, 1) forwards;
+}
+
+@keyframes hitFlash {
+    0% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+}
+
+#hit-marker.headshot-flash {
+    animation: hitFlash 0.3s ease-out forwards;
+}
+#hit-marker.headshot-flash::before, #hit-marker.headshot-flash::after {
+    background: var(--cod-red);
+    box-shadow: 0 0 8px var(--cod-red);
+}
+
+/* --- KILL FEED --- */
+#kill-feed {
+    position: fixed;
+    top: 40px;
+    right: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+    z-index: 100;
+}
+
+.kill-entry {
+    font-family: var(--font-main);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-primary);
+    background: linear-gradient(90deg, rgba(0,0,0,0), rgba(0,0,0,0.8));
+    border-right: 3px solid var(--cod-red);
+    padding: 6px 16px;
+    text-shadow: 1px 1px 0 #000;
+    animation: killFade 4s forwards;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@keyframes killFade {
+    0% { opacity: 0; transform: translateX(20px); }
+    5% { opacity: 1; transform: translateX(0); }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* =========================================
+   PROFESSIONAL VEHICLE HUD (TACTICAL STYLE)
+========================================= */
+#vehicle-hud {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 120;
+    display: none;
+    font-family: var(--font-main);
+    color: var(--text-primary);
+}
+
+#vehicle-hud.active { display: block; }
+
+/* Top Left Warnings */
+#dash-warnings {
+    position: absolute;
+    top: 120px;
+    left: 30px;
+    padding: 10px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 2px solid var(--cod-red);
+}
+
+.warning-title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--cod-red);
+    margin-bottom: 3px;
+}
+
+.warning-text {
+    font-size: 12px;
+    color: var(--text-primary);
+}
+
+/* ── LEFT DASH (RPM & TEMP) ── */
+#dash-left {
+    position: absolute;
+    bottom: 30px;
+    left: 220px; /* CRITICAL FIX: Pushed to 220px so it perfectly clears the Sector Map */
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+}
+
+.dash-gauge {
+    width: 120px;
+    padding: 12px;
+    text-align: center;
+}
+
+.dash-gauge svg { width: 100%; height: 50px; overflow: visible; }
+.gauge-bg { fill: none; stroke: rgba(0, 0, 0, 0.8); stroke-width: 8; stroke-linecap: butt;}
+.gauge-fill { fill: none; stroke: var(--cod-amber); stroke-width: 8; stroke-dasharray: 95; stroke-dashoffset: 95; transition: stroke-dashoffset 0.1s linear; }
+
+.gauge-value {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    margin-top: 8px;
+    color: var(--text-primary);
+    line-height: 1;
+}
+.gauge-value small { 
+    font-family: var(--font-main);
+    font-size: 12px; 
+    color: var(--text-muted); 
+    letter-spacing: 1px;
+}
+
+
+/* ── RIGHT DASH (SPEED & GEARS) ── */
+#dash-right {
+    position: absolute;
+    bottom: 30px;
+    right: 40px; /* Anchors cleanly to the bottom right */
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+}
+
+.gearbox {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 20px 24px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+
+.gear-map {
+    position: relative;
+    width: 60px;
+    height: 75px;
+    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-weight: 700;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.g-row { display: flex; justify-content: space-between; font-size: 16px;}
+.g-line { position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: rgba(255,255,255,0.2); transform: translateY(-50%); }
+
+#gear-stick {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: var(--text-primary);
+    border: 3px solid #000;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.1s ease;
+}
+
+#hud-gear { 
+    font-family: var(--font-display); 
+    font-size: 64px; 
+    color: var(--cod-amber); 
+    line-height: 1; 
+}
+
+.speed-cluster {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.speed-svg { 
+    position: absolute; 
+    width: 140px; 
+    height: 140px; 
+    transform: rotate(-135deg); 
+}
+
+.arc-bg { fill: none; stroke: rgba(0, 0, 0, 0.8); stroke-width: 12; stroke-dasharray: 226 301; }
+.arc-fill { fill: none; stroke: var(--text-primary); stroke-width: 12; stroke-dasharray: 226 301; stroke-dashoffset: 226; transition: stroke-dashoffset 0.1s linear; }
+
+.speed-value {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -15%);
+    text-align: center;
+}
+
+.speed-value span { 
+    font-family: var(--font-display); 
+    font-size: 64px; 
+    font-weight: 700; 
+    color: var(--text-primary); 
+    line-height: 0.9; 
+    display: block;
+}
+
+.speed-value small { 
+    font-family: var(--font-main);
+    font-size: 14px; 
+    font-weight: 600; 
+    color: var(--text-muted); 
+    letter-spacing: 2px;
+}
+/* --- INTERACT / LOOT (WARZONE STYLE) --- */
+.interact-key {
+    display: inline-block;
+    font-family: var(--font-main);
+    font-weight: 700;
+    font-size: 14px;
+    background: var(--text-primary);
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-bottom: 6px;
+}
+
+.interact-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-shadow: 0 1px 2px #000;
+    text-transform: uppercase;
+}
+
+#interact-prompt {
+    position: fixed;
+    left: 50%;
+    top: 55%; /* Centered below crosshair */
+    transform: translateX(-50%) translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 85;
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+#interact-prompt.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.loot-prompt-inner {
+    min-width: 280px;
+    padding: 16px;
+    background: var(--cod-bg-dark);
+    border: 1px solid var(--cod-border);
+    border-left: 4px solid var(--cod-amber); /* Rarity color concept */
+    backdrop-filter: blur(8px);
+}
+
+.loot-header-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+
+.loot-prompt-key {
+    width: 30px; height: 30px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.loot-prompt-icon, .loot-prompt-icon--small, .loot-prompt-ammo-box {
+    width: 48px; height: 48px;
+    object-fit: contain;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 6px;
+}
+.loot-prompt-icon--small { width: 36px; height: 36px; }
+.loot-prompt-ammo-box { background: rgba(255, 183, 0, 0.1); border-color: var(--cod-amber); }
+
+.loot-prompt-name {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.loot-prompt-stats, .loot-prompt-sub {
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+.loot-prompt-sub { color: var(--cod-green); }
+
+/* --- COMPASS (TOP CENTER TACTICAL) --- */
+#compass {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--text-primary);
+    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.8), transparent);
+    padding: 4px 60px;
+    text-align: center;
+    z-index: 65;
+    pointer-events: none;
+    border-top: 2px solid var(--cod-amber);
+}
+
+#compass-dir { font-size: 24px; font-weight: 700; color: var(--cod-amber); margin: 0 10px;}
+
+/* --- MINIMAP (WARZONE ROUND RADAR) --- */
+#minimap-wrap {
+    position: fixed;
+    bottom: 40px; /* Moved to Top Left like CoD */
+    left: 40px;
+    z-index: 65;
+    pointer-events: none;
+}
+
+#minimap-canvas {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
+    background: rgba(10, 20, 15, 0.8);
+    box-shadow: 0 0 20px rgba(0,0,0,0.8);
+}
+
+.minimap-label {
+    position: absolute;
+    top: -20px;
+    width: 100%;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-align: center;
+    padding: 2px 0;
+}
+
+.minimap-village-dist {
+    position: absolute;
+    bottom: -25px;
+    width: 100%;
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--cod-amber);
+    text-align: center;
+    padding: 2px 0;
+}
+
+/* --- SPRINT RING / VIGNETTE --- */
+#sprint-ring {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px; height: 60px;
+    opacity: 0; transition: opacity 0.2s;
+}
+#sprint-ring.visible { opacity: 0.5; }
+#sprint-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+#sprint-arc { stroke: var(--text-primary); stroke-width: 4; fill: none; stroke-dasharray: 100; transition: stroke-dashoffset linear; }
+
+#vignette {
+    position: fixed; inset: 0; pointer-events: none; z-index: 2;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.6) 100%);
+    transition: background 0.2s;
+}
+
+#vignette.damaged { animation: damageFlash 3s ease-out forwards; }
+@keyframes damageFlash {
+    0% { background: radial-gradient(ellipse at center, transparent 30%, rgba(255, 0, 0, 0.4) 100%); }
+    100% { background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.6) 100%); }
+}
+
+#blood-flash {
+    position: fixed; inset: 0; pointer-events: none; z-index: 60;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(200, 0, 0, 0) 100%);
+}
+#blood-flash.hit { animation: bloodPulse 0.3s forwards; }
+@keyframes bloodPulse {
+    0% { background: radial-gradient(ellipse at center, transparent 10%, rgba(200, 0, 0, 0.6) 100%); }
+    100% { background: radial-gradient(ellipse at center, transparent 40%, rgba(200, 0, 0, 0) 100%); }
+}
+
+/* --- NOTIFICATIONS --- */
+#notifications {
+    position: fixed;
+    top: 100px;
+    left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none;
+}
+.notif {
+    font-weight: 700; font-size: 14px;
+    color: var(--text-primary);
+    background: rgba(0,0,0,0.8);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 8px 24px;
+    animation: notifSlide 3s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+}
+@keyframes notifSlide { 0% { opacity: 0; transform: translateY(-10px); } 10% { opacity: 1; transform: translateY(0); } 80% { opacity: 1; } 100% { opacity: 0; } }
+
+#stamina-sprint-label {
+    position: fixed; bottom: 35%; left: 50%; transform: translateX(-50%);
+    font-size: 14px; font-weight: 700; color: var(--cod-amber);
+    opacity: 0; transition: opacity 0.2s; background: rgba(0,0,0,0.6); padding: 4px 12px;
+}
+#stamina-sprint-label.visible { opacity: 1; }
+
+/* --- LOADING SCREEN --- */
+#loading-screen {
+    position: fixed; inset: 0; background: #050505; z-index: 2000;
+    display: flex; align-items: center; justify-content: center; flex-direction: column; transition: opacity 0.5s;
+}
+#loading-screen.done { opacity: 0; pointer-events: none; }
+.loading-title {
+    font-family: var(--font-display); font-size: 48px; font-weight: 900;
+    color: var(--text-primary); margin-bottom: 24px; letter-spacing: 4px;
+}
+.loading-logo {
+    width: min(78vw, 420px);
+    height: auto;
+    margin-bottom: 24px;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 32px rgba(0, 0, 0, 0.45));
+}
+.loading-bar-wrap { width: 400px; height: 4px; background: rgba(255,255,255,0.1); margin-bottom: 12px; }
+#loading-bar-fill { height: 100%; background: var(--text-primary); width: 0%; transition: width 0.1s; }
+.loading-status { font-size: 14px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+
+@media (max-width: 540px) {
+    .loading-logo {
+        width: min(84vw, 320px);
+    }
+
+    .loading-bar-wrap {
+        width: min(84vw, 320px);
+    }
+}
+
+/* --- WAVE / SCORE HUD (ZOMBIES MODE) --- */
+#wave-hud {
+    position: fixed; top: 60px; left: 40px; /* Aligned left below minimap */
+    text-align: left; pointer-events: none;
+}
+#wave-label { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--cod-red); }
+#wave-zombies { font-size: 16px; font-weight: 600; color: var(--text-primary); background: rgba(0,0,0,0.6); padding: 2px 8px; display: inline-block; margin-top: 4px;}
+
+#score-hud {
+    position: fixed; bottom: 220px; right: 40px; /* Above Ammo panel */
+    text-align: right; pointer-events: none; background: rgba(0,0,0,0.6); padding: 8px 16px; border: 1px solid rgba(255,255,255,0.1);
+}
+#score-label { font-size: 12px; font-weight: 700; color: var(--cod-amber); }
+#score-val { font-family: var(--font-display); font-size: 36px; font-weight: 700; color: var(--text-primary); line-height: 1; }
+
+#wave-announce {
+    position: fixed; top: 30%; left: 50%; transform: translate(-50%, -50%);
+    text-align: center; pointer-events: none; opacity: 0;
+}
+#wave-announce.show { animation: waveShow 4s forwards; }
+@keyframes waveShow { 0% { opacity: 0; transform: translate(-50%, -50%) scale(2); } 10% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 80% { opacity: 1; } 100% { opacity: 0; } }
+.wave-announce-title { font-family: var(--font-display); font-size: 72px; font-weight: 900; color: var(--cod-red); text-shadow: 0 0 20px rgba(255,0,0,0.5); -webkit-text-stroke: 2px black;}
+.wave-announce-sub { font-size: 20px; font-weight: 700; color: var(--text-primary); margin-top: 8px; background: rgba(0,0,0,0.8); display: inline-block; padding: 4px 16px;}
+
+/* --- DEATH SCREEN (GULAG / WASTED) --- */
+#death-screen {
+    position: fixed; inset: 0; background: rgba(10, 0, 0, 0.95);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 110; opacity: 0; pointer-events: none; transition: opacity 0.5s;
+}
+#death-screen.visible { opacity: 1; pointer-events: all; }
+.death-title {
+    font-family: var(--font-display); font-size: 100px; font-weight: 900;
+    color: var(--cod-red); letter-spacing: 8px; margin-bottom: 12px;
+    text-shadow: 0 0 40px rgba(255,0,0,0.4); -webkit-text-stroke: 2px black;
+}
+.death-sub { font-size: 24px; font-weight: 600; color: var(--text-primary); margin-bottom: 40px; letter-spacing: 2px; }
+.death-btn {
+    font-family: var(--font-display); font-size: 24px; font-weight: 700;
+    color: var(--text-primary); background: rgba(255,0,0,0.2); border: 2px solid var(--cod-red);
+    padding: 16px 60px; cursor: pointer; transition: all 0.2s;
+}
+.death-btn:hover { background: var(--cod-red); color: #000; transform: scale(1.05); }
+
+/* --- ZOMBIE FLOATING UI --- */
+.zombie-healthbar-wrap {
+    position: fixed; pointer-events: none; transform: translate(-50%, -100%);
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.zombie-hb-label { font-size: 10px; font-weight: 700; color: var(--text-primary); text-shadow: 1px 1px 0 #000; }
+.zombie-hb-bg { width: 60px; height: 6px; background: rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.2); }
+.zombie-hb-fill { height: 100%; background: var(--cod-red); transition: width 0.1s linear; }
+
+.dmg-number { position: fixed; pointer-events: none; z-index: 9999; font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--text-primary); text-shadow: 1px 1px 0 #000; }
+.dmg-number.headshot { color: var(--cod-amber); font-size: 32px; animation: hsPulse 0.15s ease-out; }
+@keyframes hsPulse { 0% { transform: translate(-50%, -50%) scale(1.5) } 100% { transform: translate(-50%, -50%) scale(1) } }
+@keyframes dmgFloat { 0% { opacity: 1; transform: translate(-50%, -50%); } 100% { opacity: 0; transform: translate(-50%, calc(-50% - 60px)); } }
+
+/* --- SNIPER SCOPES & THERMAL (MODERN WARFARE STYLE) --- */
+#aim-overlay { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; opacity: 0; transition: opacity 0.1s; }
+.aim-ring { position: absolute; width: 60px; height: 60px; border: 2px solid rgba(255,255,255,0.5); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.aim-label { position: absolute; font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.8); top: 50%; left: 50%; transform: translate(-50%, calc(-50% + 40px)); }
+.aim-hline { position: absolute; width: 30px; height: 2px; background: rgba(255,255,255,0.8); top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.aim-vline { position: absolute; width: 2px; height: 30px; background: rgba(255,255,255,0.8); top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+#scope-overlay { position: fixed; inset: 0; opacity: 0; pointer-events: none; transition: opacity 0.05s ease; z-index: 80; overflow: hidden; }
+#scope-overlay.active { opacity: 1; }
+#scope-overlay::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at center, transparent 0 25vmin, rgba(0, 0, 0, 0.95) 26vmin, #000 100%);
+}
+#scope-overlay::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0, rgba(0, 0, 0, 0) 25vmin); mix-blend-mode: screen;
+}
+
+.scope-frame {
+    position: absolute; inset: 0;
+    background-image: url('../../assets/weapon/weapon-images/scope.png'); /* Ensure this asset exists or UI falls back to CSS */
+    background-position: center; background-repeat: no-repeat; background-size: contain;
+}
+
+.scope-reticle-h, .scope-reticle-v { position: absolute; background: rgba(255, 0, 0, 0.8); } /* Red illuminated reticle */
+.scope-reticle-h { left: 0; right: 0; top: 50%; height: 2px; transform: translateY(-50%); }
+.scope-reticle-v { top: 0; bottom: 0; left: 50%; width: 2px; transform: translateX(-50%); }
+
+#thermal-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 79; opacity: 0; transition: opacity 0.1s; }
+#thermal-overlay.active { opacity: 1; }
+#thermal-tint {
+    position: fixed; inset: 0; pointer-events: none; z-index: 77; opacity: 0; transition: opacity 0.1s;
+    background: rgba(255, 255, 255, 0.9); /* Stark white hot background */
+    clip-path: circle(25vmin at 50% 50%); mix-blend-mode: overlay;
+}
+#thermal-canvas {
+    position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 78; opacity: 0; transition: opacity 0.1s;
+    clip-path: circle(25vmin at 50% 50%); filter: grayscale(100%) contrast(200%); /* FLIR effect */
+}
+#scope-overlay.thermal .scope-frame { filter: invert(1) drop-shadow(0 0 20px #000); }
+@keyframes thermalPulse { 0%, 100% { opacity: 0.9; } 50% { opacity: 1.0; } }
+#thermal-overlay::before { content: ''; position: fixed; inset: 0; background: rgba(10, 10, 10, 0.95); }
+#scope-overlay.thermal .scope-reticle-h, #scope-overlay.thermal .scope-reticle-v { background: #000; box-shadow: none; } /* Black reticle on white hot */
+
+/* --- INVENTORY (WARZONE BACKPACK) --- */
+.inv-key {
+    margin-left: auto; font-size: 12px; font-weight: 700; background: var(--text-primary); color: #000; padding: 2px 6px; border-radius: 2px;
+}
+
+#inventory-panel {
+    position: fixed;
+    bottom: 340px; /* FIX OVERLAP: Pushes it up above the ammo/weapons */
+    right: 40px;
+    background: none;
+    padding: 0;
+    border: 0;
+    color: var(--text-primary);
+    pointer-events: none;
+    z-index: 55;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.inv-title {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: rgba(0, 0, 0, 0.6);
+    padding: 4px 12px;
+    text-transform: uppercase;
+    border: 1px solid var(--cod-border);
+}
+
+.inv-slot {
+    background: var(--cod-bg-dark);
+    border: 1px solid var(--cod-border);
+    border-right: 4px solid var(--cod-green); /* Green edge for healing items */
+    padding: 6px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 140px;
+    backdrop-filter: blur(4px);
+}
+
+#mushroom-qty { 
+    color: var(--text-primary); 
+    font-family: var(--font-display); 
+    font-size: 18px; 
+}
+
+.inv-slot:hover { background: rgba(255,255,255,0.1); border-color: var(--text-primary); }
+.inv-slot.empty { opacity: 0.3; cursor: default; pointer-events: none; }
+#mushroom-icon { font-size: 18px; }
+/* CoD Loadout layout adjustments for existing DOM */
+.cod-loadout { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; }
+.wp-thumb { width: 60px; height: 30px; display: flex; align-items: center; justify-content: center; }
+.wp-meta { display: flex; flex-direction: column; align-items: flex-start; }
+.wp-ammo-mini { font-size: 12px; font-weight: 600; color: var(--cod-amber); }
+
+/* --- WEAPON WHEEL (GTA/CoD Style) --- */
+#weapon-wheel { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 175; pointer-events: none; }
+#weapon-wheel.open { display: flex; pointer-events: all; }
+#ww-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); pointer-events: none; }
+#ww-container { position: relative; width: 500px; height: 500px; flex-shrink: 0; }
+#ww-svg { width: 100%; height: 100%; overflow: visible; display: block; filter: drop-shadow(0 0 20px rgba(0,0,0,0.8)); }
+#ww-info {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    text-align: center; pointer-events: none; width: 200px; background: rgba(0,0,0,0.6); padding: 16px; border: 1px solid rgba(255,255,255,0.2);
+}
+#ww-name { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--text-primary); }
+#ww-sub { font-size: 14px; font-weight: 600; color: var(--cod-amber); margin-top: 4px; }
+

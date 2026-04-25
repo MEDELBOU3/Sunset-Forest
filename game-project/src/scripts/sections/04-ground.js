@@ -1,0 +1,2 @@
+﻿export default "        // =========================================================\n        // GROUND\n        // =========================================================\n        const ground = new THREE.Mesh(\n            new THREE.PlaneGeometry(400, 400),\n            new THREE.MeshStandardMaterial({ color: 0x1a3316, roughness: 1.0, metalness: 0 })\n        );\n        ground.rotation.x = -Math.PI / 2;\n        ground.position.y = -9;\n        ground.receiveShadow = true;\n        ground.matrixAutoUpdate = false; ground.updateMatrix();\n        scene.add(ground);";
+

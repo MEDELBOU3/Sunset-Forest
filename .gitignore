@@ -1,0 +1,7 @@
+node_modules/
+.vscode/
+dist/
+build/
+game-project--/
+.env
+*.log

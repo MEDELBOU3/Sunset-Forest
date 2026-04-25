@@ -1,0 +1,14 @@
+{
+  "name": "sunset-forest-multiplayer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "server": "node server/index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "firebase-admin": "^12.5.0",
+    "ws": "^8.18.0"
+  }
+}
+

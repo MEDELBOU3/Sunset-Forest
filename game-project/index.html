@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunset Forest — Survival Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="src/styles/menu.css">
+    <link rel="stylesheet" href="src/styles/menu-compact.css">
+    <link rel="stylesheet" href="src/styles/style.css">
+</head>
+
+<body>
+
+    <div id="loading-screen">
+        <img class="loading-logo" src="assets/images/logo.png" alt="Sunset Forest logo">
+        <div class="loading-bar-wrap">
+            <div id="loading-bar-fill"></div>
+        </div>
+        <div class="loading-status" id="loading-status">Initialising engine...</div>
+    </div>
+
+    <div id="blocker" style="cursor: auto;">
+        <div class="blocker-bg"></div>
+
+        <!-- atmosphere -->
+        <div class="vignette"></div>
+        <div class="ambient"></div>
+        <div class="accent-line-top"></div>
+        <div class="accent-line-bottom"></div>
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+
+        <!-- embers -->
+        <div class="embers-wrap">
+            <div class="ember"></div>
+            <div class="ember"></div>
+            <div class="ember"></div>
+            <div class="ember"></div>
+            <div class="ember"></div>
+            <div class="ember"></div>
+            <div class="ember"></div>
+            <div class="ember"></div>
+        </div>
+
+        <!-- USER CORNER (Top Right) -->
+        <div id="user-corner">
+            <div id="corner-auth-trigger" class="corner-login-btn">
+                <div class="login-dot"></div>
+                <span>SIGN IN / JOIN</span>
+            </div>
+            
+            <div id="corner-profile-card" class="auth-hidden">
+                <div class="mini-profile">
+                    <div class="mini-avatar"></div>
+                    <div class="mini-info">
+                        <div id="mini-name" class="mini-name">SURVIVOR</div>
+                        <div class="mini-status">● ONLINE</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN LAYOUT (Title & Controls Left) -->
+        <div id="main-menu-layout">
+            <div class="menu-left-section">
+                <div class="menu-eyebrow">SURVIVAL EXPERIENCE</div>
+                <img class="menu-logo" src="assets/images/logo.png" alt="Sunset Forest logo">
+                <div class="menu-subtitle">SURVIVAL EDITION</div>
+
+                <div class="controls-panel">
+                    <div class="panel-header">CONTROLS</div>
+                    <div class="controls-list">
+                        <div class="control-row">
+                            <span class="control-key">W A S D</span>
+                            <span class="control-desc">Movement</span>
+                        </div>
+                        <div class="control-row">
+                            <span class="control-key">SHIFT</span>
+                            <span class="control-desc">Sprint</span>
+                        </div>
+                        <div class="control-row">
+                            <span class="control-key">LMB</span>
+                            <span class="control-desc">Fire</span>
+                        </div>
+                        <div class="control-row">
+                            <span class="control-key">RMB</span>
+                            <span class="control-desc">Aim</span>
+                        </div>
+                        <div class="control-row">
+                            <span class="control-key">R</span>
+                            <span class="control-desc">Reload</span>
+                        </div>
+                        <div class="control-row">
+                            <span class="control-key">SPACE</span>
+                            <span class="control-desc">Interact</span>
+                        </div>
+                        <div class="control-row">
+                            <span class="control-key">T / C</span>
+                            <span class="control-desc">Tactical</span>
+                        </div>
+                        <div class="control-row">
+                            <span class="control-key">ESC</span>
+                            <span class="control-desc">Pause</span>
+                        </div>
+                    </div>
+                    <button id="play-btn">ENTER THE FOREST</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- footers -->
+        <div class="hud-bottom">
+            <div class="hud-item">SUNSET FOREST // ALPHA</div>
+            <div class="hud-item">EXPERIMENTAL BUILD V1.0</div>
+        </div>
+
+    </div>
+
+    <!-- AUTH MODAL (Moved Outside Blocker for visibility) -->
+    <div id="auth-modal-overlay" class="auth-hidden">
+        <div class="auth-modal-content">
+            <div class="modal-close-btn" id="modal-close">&times;</div>
+            <div class="auth-modal-header">AUTHENTICATION REQUIRED</div>
+            <div class="auth-modal-body">
+                <div class="auth-box-header">NETWORKING & PROFILE</div>
+                
+                <div id="auth-logged-out">
+                        <div class="auth-input-group">
+                        <input type="text" id="player-name-input" placeholder="PLAYER NAME (PUBLIC)" maxlength="16">
+                        <input type="email" id="email-input" placeholder="EMAIL ADDRESS">
+                        <input type="password" id="password-input" placeholder="PASSWORD">
+                        </div>
+                        <div class="auth-button-row">
+                            <button id="auth-submit-btn" class="auth-main-btn">LOGIN / REGISTER</button>
+                            <button id="google-auth-btn" class="auth-google-btn">
+                            <svg viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+                            </button>
+                        </div>
+                        <div id="auth-status-msg" class="auth-status-status">READY FOR CONNECTION</div>
+                        <div id="guest-access-link" style="color:rgba(255,255,255,0.2); font-size:9px; text-decoration:underline; cursor:pointer; text-align:center; margin-top:20px; font-family:'Barlow Condensed',sans-serif; letter-spacing:0.2em;">CONTINUE AS GUEST (OFFLINE)</div>
+                </div>
+
+                <div id="auth-logged-in" class="auth-hidden">
+                    <div class="profile-card">
+                        <div class="profile-avatar"></div>
+                        <div class="profile-info">
+                            <div id="display-player-name" class="profile-name">SURVIVOR</div>
+                            <div id="display-player-id" class="profile-id">ID: 000000</div>
+                        </div>
+                        <button id="logout-btn" class="profile-logout-btn">DISCONNECT</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HUD (Hidden initially) -->
+    <div id="hud">
+        <div id="crosshair">
+            <div class="ch-line h left"></div>
+            <div class="ch-line h right"></div>
+            <div class="ch-line v up"></div>
+            <div class="ch-line v down"></div>
+            <div class="ch-dot"></div>
+        </div>
+        <div id="panel-tl">
+            <div class="stat-row">
+                <div class="stat-label">H LT H</div>
+                <div class="stat-bar-wrap">
+                    <div id="health-bar" class="stat-bar health" style="width: 100%"></div>
+                </div>
+                <div id="health-val" class="stat-val">100</div>
+            </div>
+            <div class="stat-row">
+                <div class="stat-label">S T A M</div>
+                <div class="stat-bar-wrap">
+                    <div id="stamina-bar" class="stat-bar stamina" style="width: 100%"></div>
+                </div>
+                <div id="stamina-val" class="stat-val">100</div>
+            </div>
+        </div>
+        <div id="panel-br">
+            <div class="weapon-name" id="weapon-name">Kimber 1911</div>
+            <div class="ammo-count">
+                <span id="ammo-count">7</span><span class="ammo-divider">/</span><span class="ammo-max" id="ammo-max">7</span>
+            </div>
+            <div id="ammo-pips" class="ammo-pips"></div>
+            <div class="ammo-label">RESERVE AMMO</div>
+            <div class="ammo-reserve-wrap"><span id="ammo-reserve">0</span></div>
+            <div id="wp-slots-container"></div>
+        </div>
+        <div id="reload-notice">RELOADING</div>
+        <div id="reload-bar-wrap">
+            <div id="reload-bar"></div>
+        </div>
+        <div id="hit-marker"></div>
+        <div id="kill-feed"></div>
+    </div>
+
+    <!-- INTERACT PROMPT -->
+    <div id="interact-prompt" aria-live="polite">
+        <div class="loot-prompt-inner">
+            <div class="loot-header-row">
+                <div class="loot-prompt-key">E</div>
+                <div id="loot-status-text" class="loot-prompt-stats">PICK UP</div>
+            </div>
+            <div id="loot-name" class="loot-prompt-name">ITEM</div>
+            <div id="interact-text" class="loot-prompt-sub">PRESS TO INTERACT</div>
+        </div>
+    </div>
+
+    <div id="pause-menu">
+        <div class="pause-box">
+            <div class="pause-title">PAUSED</div>
+            <div class="pause-hint">Game instance suspended</div>
+            <button id="resume-btn" class="pause-resume">RESUME MISSION</button>
+        </div>
+    </div>
+
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+          }
+        }
+    </script>
+    <script type="module" src="src/scripts/main.js"></script>
+</body>
+
+</html>

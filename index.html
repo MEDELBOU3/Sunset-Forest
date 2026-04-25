@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="CineScope is a high-performance vanilla JavaScript movie discovery app powered by TMDB."
+    />
+    <title>CineScope | Movie Discovery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header" data-header>
+        <nav class="navbar container" aria-label="Primary">
+          <a class="brand" href="#top" aria-label="CineScope home">
+            <span class="brand__mark" aria-hidden="true"></span>
+            <span class="brand__text">CineScope</span>
+          </a>
+
+          <button
+            class="nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            data-nav-toggle
+          >
+            <span class="sr-only">Toggle navigation menu</span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <div class="nav-links" data-nav-desktop>
+            <a href="#featured">Featured</a>
+            <a href="#trending">Trending</a>
+            <a href="#top-rated">Top Rated</a>
+            <a href="#upcoming">Upcoming</a>
+            <a href="#watchlist">Watchlist</a>
+          </div>
+
+          <div class="nav-actions">
+            <button class="nav-pill" type="button" data-open-watchlist>
+              Watchlist
+            </button>
+          </div>
+        </nav>
+
+        <div
+          class="mobile-menu container"
+          id="mobile-menu"
+          hidden
+          data-mobile-menu
+        >
+          <a href="#featured">Featured</a>
+          <a href="#trending">Trending</a>
+          <a href="#top-rated">Top Rated</a>
+          <a href="#upcoming">Upcoming</a>
+          <a href="#watchlist">Watchlist</a>
+        </div>
+      </header>
+
+      <main id="top">
+        <section class="hero" id="featured" aria-labelledby="hero-title">
+          <div class="hero__backdrop" aria-hidden="true" data-hero-backdrop></div>
+          <div class="hero__overlay" aria-hidden="true"></div>
+          <div class="hero__content container">
+            <p class="eyebrow">Now Trending</p>
+            <div class="hero__copy">
+              <span class="badge">Featured Pick</span>
+              <h1 id="hero-title" data-hero-title>
+                Loading tonight's featured movie...
+              </h1>
+              <p class="hero__meta">
+                <span data-hero-rating>TMDB Rating: --</span>
+                <span data-hero-year>Year: ----</span>
+              </p>
+              <p class="hero__description" data-hero-overview>
+                A cinematic discovery experience with fast browsing, live search,
+                and a personal watchlist built in vanilla JavaScript.
+              </p>
+              <div class="hero__actions">
+                <button class="btn btn--primary" type="button" data-hero-trailer>
+                  Watch Trailer
+                </button>
+                <button class="btn btn--ghost" type="button" data-hero-details>
+                  View Details
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="search-panel container" aria-labelledby="search-heading">
+          <div class="section-heading">
+            <p class="eyebrow">Explore</p>
+            <h2 id="search-heading">Search and discover instantly</h2>
+          </div>
+
+          <form class="search-form" role="search" data-search-form>
+            <label class="sr-only" for="movie-search">Search movies</label>
+            <div class="search-input-wrap">
+              <input
+                id="movie-search"
+                name="query"
+                type="search"
+                placeholder="Search by title, genre, or cast..."
+                autocomplete="off"
+                data-search-input
+              />
+              <button class="search-submit" type="submit">Search</button>
+            </div>
+          </form>
+
+          <div class="search-results" data-search-results aria-live="polite">
+            <p class="search-placeholder">
+              Search results will appear here as you type.
+            </p>
+          </div>
+        </section>
+
+        <section class="content-section container" id="trending" aria-labelledby="trending-title">
+          <div class="section-heading section-heading--inline">
+            <div>
+              <p class="eyebrow">Popular Now</p>
+              <h2 id="trending-title">Trending</h2>
+            </div>
+            <a class="section-link" href="#discover">See all</a>
+          </div>
+          <div
+            class="carousel"
+            data-carousel="trending"
+            aria-label="Trending movies"
+          ></div>
+        </section>
+
+        <section class="content-section container" id="top-rated" aria-labelledby="top-rated-title">
+          <div class="section-heading section-heading--inline">
+            <div>
+              <p class="eyebrow">Critics' Choice</p>
+              <h2 id="top-rated-title">Top Rated</h2>
+            </div>
+            <a class="section-link" href="#discover">See all</a>
+          </div>
+          <div
+            class="carousel"
+            data-carousel="top-rated"
+            aria-label="Top rated movies"
+          ></div>
+        </section>
+
+        <section class="content-section container" id="upcoming" aria-labelledby="upcoming-title">
+          <div class="section-heading section-heading--inline">
+            <div>
+              <p class="eyebrow">Coming Soon</p>
+              <h2 id="upcoming-title">Upcoming</h2>
+            </div>
+            <a class="section-link" href="#discover">See all</a>
+          </div>
+          <div
+            class="carousel"
+            data-carousel="upcoming"
+            aria-label="Upcoming movies"
+          ></div>
+        </section>
+
+        <section class="discover-section container" id="discover" aria-labelledby="discover-title">
+          <div class="section-heading">
+            <p class="eyebrow">Browse More</p>
+            <h2 id="discover-title">Discover movies without limits</h2>
+          </div>
+          <div class="movie-grid" data-movie-grid aria-live="polite"></div>
+          <div class="infinite-scroll-sentinel" data-load-more-trigger aria-hidden="true"></div>
+        </section>
+
+        <section class="watchlist-section container" id="watchlist" aria-labelledby="watchlist-title">
+          <div class="section-heading section-heading--inline">
+            <div>
+              <p class="eyebrow">Saved Picks</p>
+              <h2 id="watchlist-title">Your Watchlist</h2>
+            </div>
+            <button class="btn btn--ghost btn--small" type="button" data-open-watchlist>
+              Open Watchlist
+            </button>
+          </div>
+          <div class="movie-grid movie-grid--watchlist" data-watchlist-grid></div>
+        </section>
+      </main>
+
+      <div
+        class="modal"
+        id="movie-modal"
+        hidden
+        aria-hidden="true"
+        aria-labelledby="movie-modal-title"
+        role="dialog"
+        data-movie-modal
+      >
+        <div class="modal__backdrop" data-modal-close></div>
+        <div class="modal__panel">
+          <button class="modal__close" type="button" aria-label="Close details" data-modal-close>
+            &times;
+          </button>
+          <div class="modal__content" data-modal-content></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./js/app.js"></script>
+  </body>
+</html>

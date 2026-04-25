@@ -5,7 +5,7 @@
 </p>
 
 ## 🌲 Overview
-<img src="game-project--/src/ui/game-view.png">
+<img src="game-project/src/ui/game-view.png">
 **Sunset Forest: Survival Edition** is an immersive 3D survival game built with **JavaScript** and **Three.js**. Experience a stylized, atmospheric world where beauty meets danger. Navigate through a dense forest at sunset, scavenge for supplies, and fight to survive against waves of relentless zombies.
 
 ## 🎮 Key Features

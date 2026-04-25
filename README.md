@@ -4,11 +4,11 @@
   <img src="game-project/assets/images/logo.png" alt="Sunset Forest Logo" width="400">
 </p>
 
-## 🌲 Overview
+## Overview
 <img src="game-project/src/ui/game-view.png">
 **Sunset Forest: Survival Edition** is an immersive 3D survival game built with **JavaScript** and **Three.js**. Experience a stylized, atmospheric world where beauty meets danger. Navigate through a dense forest at sunset, scavenge for supplies, and fight to survive against waves of relentless zombies.
 
-## 🎮 Key Features
+## Key Features
 
 - **Dynamic Combat**: Engaging gunplay with various weapons (pistols, rifles, snipers), headshot detection, hit markers, and grenade mechanics.
 - **Loot & Survival**: Scavenge the world for ammo, healing mushrooms, and weapon upgrades like scopes.
@@ -17,14 +17,14 @@
 - **Progression System**: Face increasing challenges through wave-based stage progression and evolving enemy difficulty.
 - **Multiplayer Ready**: Integrated with Firebase for authentication and real-time multiplayer capabilities.
 
-## 🛠️ Technical Highlights
+## Technical Highlights
 
 - **Custom 3D Engine**: Built on top of Three.js with modular JavaScript components for easy maintenance and scaling.
 - **Optimized Performance**: Features runtime performance tweaks, asset management, and efficient collision handling.
 - **Rich UI/UX**: Includes a custom HUD, weapon wheel, minimap, and interactive menus.
 - **Real-time Backend**: Powered by Node.js, Express, and Firebase for user auth and multiplayer synchronization.
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) installed on your machine.

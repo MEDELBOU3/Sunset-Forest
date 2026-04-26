@@ -726,9 +726,9 @@ const source = ['"use strict";', ...sections].join('\n')
         "scene.add(root);\n                CollisionSystem.registerMesh(root, 'car');\n                armoredCar.root = root;\n                armoredCar.loaded = true;",
         "scene.add(root);\n                armoredCar.root = root;\n                armoredCar.loaded = true;"
     )
-    .replace(
-        "const throttle = Number(moveState.backward) - Number(moveState.forward);\n            const steer = Number(moveState.left) - Number(moveState.right);",
-        "const throttle = Number(moveState.forward) - Number(moveState.backward);\n            const steer = Number(moveState.left) - Number(moveState.right);"
+   .replace(
+        "const throttle = Number(moveState.forward) - Number(moveState.backward);\n            const steer = Number(moveState.left) - Number(moveState.right);",
+        "const throttle = Number(moveState.backward) - Number(moveState.forward);\n            const steer = Number(moveState.right) - Number(moveState.left);"
     )
     .replace(
         "getNearbyArmoredCar = function () {\n            if (!armoredCar.loaded || !armoredCar.root || armoredCar.active) return null;\n\n            armoredCar.root.updateMatrixWorld(true);\n            armoredCarInteractBox.setFromObject(armoredCar.root);\n\n            if (armoredCarInteractBox.isEmpty()) {\n                const dx = camera.position.x - armoredCar.root.position.x;\n                const dz = camera.position.z - armoredCar.root.position.z;\n                return ((dx * dx) + (dz * dz) <= 8.5 * 8.5) ? armoredCar : null;\n            }\n\n            const margin = 1.35;\n            const px = camera.position.x;\n            const pz = camera.position.z;\n            const minX = armoredCarInteractBox.min.x - margin;\n            const maxX = armoredCarInteractBox.max.x + margin;\n            const minZ = armoredCarInteractBox.min.z - margin;\n            const maxZ = armoredCarInteractBox.max.z + margin;\n\n            if (px >= minX && px <= maxX && pz >= minZ && pz <= maxZ) {\n                return armoredCar;\n            }\n\n            const clampedX = Math.max(minX, Math.min(px, maxX));\n            const clampedZ = Math.max(minZ, Math.min(pz, maxZ));\n            const dx = px - clampedX;\n            const dz = pz - clampedZ;\n\n            return ((dx * dx) + (dz * dz) <= 1.2 * 1.2) ? armoredCar : null;\n        };",
